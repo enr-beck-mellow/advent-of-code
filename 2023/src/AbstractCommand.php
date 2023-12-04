@@ -28,17 +28,18 @@ abstract class AbstractCommand extends Command
             $question = new Question('Enter puzzle input: ');
             $question->setMultiline(true);
             $inputData = $questionHelper->ask($input, $output, $question);
+            $output->writeln('');
         }
 
         // run part 1, part 2, or both
         $part = $input->getArgument('part');
         if ($part === '1') {
-            $output->writeln("\nPart 1: " . $this->part1($inputData));
+            $output->writeln("Part 1: " . $this->part1($inputData));
         } elseif ($part === '2') {
-            $output->writeln("\nPart 2: " . $this->part2($inputData));
+            $output->writeln("Part 2: " . $this->part2($inputData));
         } else {
-            $output->writeln("\nPart 1: " . $this->part1($inputData));
-            $output->writeln("\nPart 2: " . $this->part2($inputData));
+            $output->writeln("Part 1: " . $this->part1($inputData));
+            $output->writeln("Part 2: " . $this->part2($inputData));
         }
 
         return Command::SUCCESS;

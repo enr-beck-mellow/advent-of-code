@@ -28,4 +28,4 @@ You can supply the input for the code as a file:
 ```bash
 ./aoc -i <input-file> <day> <part>
 ```
-If no input file is supplied, the input will be asked for in the terminal.
+If no input file is supplied, the input will be asked for in the terminal (confirm with ctrl-d).
