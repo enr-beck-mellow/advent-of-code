@@ -3,6 +3,12 @@
 require_once __DIR__ . '/vendor/autoload.php';
 use Symfony\Component\Console\Application;
 $app = new Application();
-$app -> add(new AdventOfCode\TwentyTwentyThree\Day01Command());
-$app -> add(new AdventOfCode\TwentyTwentyThree\Day02Command());
+for ($i = 1; $i <= 24; $i++) {
+    $day = str_pad($i, 2, '0', STR_PAD_LEFT);
+    if (!file_exists(__DIR__ . "/src/Day{$day}Command.php")) {
+        continue;
+    }
+    $class = "AdventOfCode\\TwentyTwentyThree\\Day{$day}Command";
+    $app -> add(new $class());
+}
 $app -> run();
