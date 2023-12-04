@@ -13,22 +13,22 @@ class Day02Command extends AbstractCommand
 
     protected function part1($input): int
     {
-        $possibleGames = [];
+        $values = [];
         $lines = explode("\n", $input);
         foreach ($lines as $line) {
-            $possibleGames[] = $this->getGameNumberIfPossible($line);
+            $values[] = $this->getGameNumberIfPossible($line);
         }
-        return array_sum($possibleGames);
+        return array_sum($values);
     }
 
     protected function part2($input): int
     {
-        $possibleGames = [];
+        $values = [];
         $lines = explode("\n", $input);
         foreach ($lines as $line) {
-            $possibleGames[] = $this->getLowestPossibleSetPower($line);
+            $values[] = $this->getLowestPossibleSetPower($line);
         }
-        return array_sum($possibleGames);
+        return array_sum($values);
     }
 
     private function getGameNumberIfPossible(string $line): int
