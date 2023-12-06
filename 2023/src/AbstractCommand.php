@@ -11,6 +11,9 @@ use Symfony\Component\Console\Question\Question;
 
 abstract class AbstractCommand extends Command
 {
+    protected InputInterface $input;
+    protected OutputInterface $output;
+
     public function configure(): void
     {
         $this->addArgument('part', InputArgument::OPTIONAL, 'Part of the day to run (1 or 2)');
@@ -19,6 +22,9 @@ abstract class AbstractCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->input = $input;
+        $this->output = $output;
+
         // get input data
         $inputFile = $input->getOption('input');
         if ($inputFile) {
