@@ -14,6 +14,7 @@ class Day08Command extends AbstractCommand
     protected function part1($input): int
     {
         list($directions, $mapLines) = explode("\n\n", $input);
+        $directions = str_replace(['L', 'R'], ['0', '1'], $directions);
 
         $map = [];
         $mapLines = explode("\n", $mapLines);
@@ -26,8 +27,8 @@ class Day08Command extends AbstractCommand
         $i = 0;
         $next = 'AAA';
         while ($next !== 'ZZZ') {
-            $direction = $directions[$i % strlen($directions)];
-            $next = $map[$next][$direction === 'L' ? 0 : 1];
+            $direction = (int)$directions[$i % strlen($directions)];
+            $next = $map[$next][$direction];
             $i++;
         }
 
@@ -37,6 +38,7 @@ class Day08Command extends AbstractCommand
     protected function part2($input): int
     {
         list($directions, $mapLines) = explode("\n\n", $input);
+        $directions = str_replace(['L', 'R'], ['0', '1'], $directions);
 
         $map = [];
         $startingPoints = [];
@@ -54,8 +56,8 @@ class Day08Command extends AbstractCommand
         foreach ($startingPoints as $startingPoint) {
             $i = 0;
             while ($startingPoint[2] !== 'Z') {
-                $direction = $directions[$i % strlen($directions)];
-                $startingPoint = $map[$startingPoint][$direction === 'L' ? 0 : 1];
+                $direction = (int)$directions[$i % strlen($directions)];
+                $startingPoint = $map[$startingPoint][$direction];
                 $i++;
             }
             $routeLengths[] = $i;
@@ -64,22 +66,20 @@ class Day08Command extends AbstractCommand
         return $this->leastCommonMultiple($routeLengths);
     }
 
-    private function leastCommonMultiple(array $routeLengths): int
+    private function leastCommonMultiple(array $numbers): int
     {
-        $lcm = $routeLengths[0];
-        for ($i = 1; $i < count($routeLengths); $i++) {
-            $lcm = $lcm * $routeLengths[$i] / $this->greatestCommonDivisor($lcm, $routeLengths[$i]);
-        }
+        // https://en.wikipedia.org/wiki/Least_common_multiple
+        return array_reduce(
+            $numbers,
+            fn($carry, $number) => $carry * $number / $this->greatestCommonDivisor($carry, $number),
+            1
+        );
     }
 
-    private function greatestCommonDivisor($carry, $item): int
+    private function greatestCommonDivisor($a, $b): int
     {
-        while ($item !== 0) {
-            $t = $item;
-            $item = $carry % $item;
-            $carry = $t;
-        }
-        return $carry;
+        // https://en.wikipedia.org/wiki/Euclidean_algorithm
+        return $b === 0 ? $a : $this->greatestCommonDivisor($b, $a % $b);
     }
 
 }
