@@ -36,12 +36,50 @@ class Day08Command extends AbstractCommand
 
     protected function part2($input): int
     {
-        $values = [];
-        $lines = explode("\n", $input);
-        foreach ($lines as $line) {
-            $values[] = 0;
+        list($directions, $mapLines) = explode("\n\n", $input);
+
+        $map = [];
+        $startingPoints = [];
+        $mapLines = explode("\n", $mapLines);
+        foreach ($mapLines as $mapLine) {
+            list($mapKey, $mapKeyValue) = explode(' = ', str_replace(['(', ',', ')'], '', $mapLine));
+            list($left, $right) = explode(' ', $mapKeyValue);
+            $map[$mapKey] = [$left, $right];
+            if ($mapKey[2] === 'A') {
+                $startingPoints[] = $mapKey;
+            }
         }
-        return array_sum($values);
+
+        $routeLengths = [];
+        foreach ($startingPoints as $startingPoint) {
+            $i = 0;
+            while ($startingPoint[2] !== 'Z') {
+                $direction = $directions[$i % strlen($directions)];
+                $startingPoint = $map[$startingPoint][$direction === 'L' ? 0 : 1];
+                $i++;
+            }
+            $routeLengths[] = $i;
+        }
+
+        return $this->leastCommonMultiple($routeLengths);
+    }
+
+    private function leastCommonMultiple(array $routeLengths): int
+    {
+        $lcm = $routeLengths[0];
+        for ($i = 1; $i < count($routeLengths); $i++) {
+            $lcm = $lcm * $routeLengths[$i] / $this->greatestCommonDivisor($lcm, $routeLengths[$i]);
+        }
+    }
+
+    private function greatestCommonDivisor($carry, $item): int
+    {
+        while ($item !== 0) {
+            $t = $item;
+            $item = $carry % $item;
+            $carry = $t;
+        }
+        return $carry;
     }
 
 }
